@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Niyantran — BESCOM Grid Command</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --red: #F63049;
+    --red-mid: #D02752;
+    --red-deep: #8A244B;
+    --navy: #111F35;
+    --navy-light: #1a2d4a;
+    --navy-mid: #162238;
+    --text: #e8edf5;
+    --text-dim: #7a8fa8;
+    --text-faint: #3d5270;
+    --border: rgba(246,48,73,0.15);
+    --border-dim: rgba(255,255,255,0.06);
+  }
+
+  html, body {
+    width: 100vw; height: 100vh; overflow: hidden;
+    background: var(--navy);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: var(--text);
+  }
+
+  /* SCANLINE OVERLAY */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none; z-index: 100;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr 280px;
+    grid-template-rows: 56px 1fr;
+    height: 100vh;
+    gap: 0;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    grid-column: 1 / -1;
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 24px;
+    gap: 32px;
+    position: relative;
+  }
+
+  .topbar-logo {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+
+  .topbar-label {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .topbar-right {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 20px;
+  }
+
+  .live-pill {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--red);
+  }
+
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--red);
+    animation: pulse-dot 1.4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .topbar-time {
+    font-size: 11px; color: var(--text-dim);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    background: var(--navy-mid);
+    border-right: 1px solid var(--border-dim);
+    padding: 20px 0;
+    display: flex; flex-direction: column; gap: 2px;
+    overflow: hidden;
+  }
+
+  .sidebar-section {
+    padding: 6px 20px 2px;
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--text-faint);
+    margin-top: 8px;
+  }
+
+  .sidebar-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 20px;
+    font-size: 12px; font-weight: 400;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+    letter-spacing: 0.02em;
+  }
+
+  .sidebar-item:hover { color: var(--text); background: rgba(246,48,73,0.05); }
+
+  .sidebar-item.active {
+    color: var(--red);
+    border-left-color: var(--red);
+    background: rgba(246,48,73,0.07);
+    font-weight: 500;
+  }
+
+  .sidebar-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: currentColor; flex-shrink: 0;
+  }
+
+  .sidebar-badge {
+    margin-left: auto;
+    background: rgba(246,48,73,0.2);
+    color: var(--red);
+    font-size: 9px; font-weight: 700;
+    padding: 2px 6px; border-radius: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  /* MAIN */
+  .main {
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 16px;
+    overflow: hidden;
+  }
+
+  /* KPI ROW */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .kpi-card {
+    background: var(--navy-light);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    padding: 14px 16px;
+    position: relative; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s ease;
+  }
+
+  .kpi-card.loaded::before { transform: scaleX(1); }
+
+  .kpi-card:hover { border-color: var(--border); }
+
+  .kpi-label {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 6px;
+  }
+
+  .kpi-val {
+    font-size: 26px; font-weight: 700;
+    line-height: 1; color: var(--text);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi-val span { font-size: 13px; font-weight: 400; color: var(--text-dim); margin-left: 3px; }
+
+  .kpi-sub {
+    font-size: 10px; color: var(--text-dim);
+    margin-top: 4px; letter-spacing: 0.03em;
+  }
+
+  .kpi-delta {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 10px; font-weight: 600;
+    margin-top: 4px;
+  }
+
+  .kpi-delta.up { color: var(--red); }
+  .kpi-delta.down { color: #4fc89a; }
+
+  /* CHART AREA */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .panel {
+    background: var(--navy-light);
+    border: 1px solid var(--border-dim);
+    border-radius: 8px;
+    padding: 16px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  .panel-head {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px; flex-shrink: 0;
+  }
+
+  .panel-title {
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .panel-tag {
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--red-mid);
+    background: rgba(208,39,82,0.12);
+    padding: 3px 8px; border-radius: 4px;
+  }
+
+  /* WAVEFORM CHART */
+  .wave-container {
+    flex: 1; position: relative; min-height: 0;
+  }
+
+  canvas#waveChart {
+    width: 100%; height: 100%;
+  }
+
+  /* FEEDER MINI BARS */
+  .feeder-list {
+    flex: 1; overflow: hidden;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+
+  .feeder-row {
+    display: flex; flex-direction: column; gap: 3px;
+  }
+
+  .feeder-meta {
+    display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .feeder-name {
+    font-size: 10px; font-weight: 500;
+    color: var(--text-dim); letter-spacing: 0.03em;
+  }
+
+  .feeder-pct {
+    font-size: 10px; font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .feeder-bar-track {
+    height: 4px; background: rgba(255,255,255,0.05);
+    border-radius: 2px; overflow: hidden;
+  }
+
+  .feeder-bar-fill {
+    height: 100%; border-radius: 2px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .feeder-bar-fill.critical { background: var(--red); }
+  .feeder-bar-fill.warn { background: #e07b30; }
+  .feeder-bar-fill.ok { background: #4fc89a; }
+
+  /* RIGHT PANEL */
+  .right-panel {
+    background: var(--navy-mid);
+    border-left: 1px solid var(--border-dim);
+    padding: 20px 16px;
+    display: flex; flex-direction: column; gap: 16px;
+    overflow: hidden;
+  }
+
+  .alert-section-label {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+  }
+
+  .alert-list {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+
+  .alert-item {
+    background: var(--navy-light);
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 2px solid;
+  }
+
+  .alert-item:hover { background: rgba(255,255,255,0.03); }
+  .alert-item.crit { border-left-color: var(--red); }
+  .alert-item.warn { border-left-color: #e07b30; }
+  .alert-item.info { border-left-color: var(--text-faint); }
+
+  .alert-zone {
+    font-size: 11px; font-weight: 600;
+    color: var(--text); letter-spacing: 0.02em;
+    margin-bottom: 2px;
+  }
+
+  .alert-msg {
+    font-size: 10px; color: var(--text-dim); line-height: 1.4;
+  }
+
+  .alert-time {
+    font-size: 9px; color: var(--text-faint);
+    margin-top: 4px; letter-spacing: 0.05em;
+  }
+
+  /* RING GAUGE */
+  .ring-wrap {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px;
+  }
+
+  .ring-label {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-faint); text-align: center;
+  }
+
+  /* SEPARATOR */
+  .sep { height: 1px; background: var(--border-dim); flex-shrink: 0; }
+
+  /* STAT PAIR */
+  .stat-pair {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+
+  .stat-mini {
+    background: var(--navy-light);
+    border: 1px solid var(--border-dim);
+    border-radius: 6px;
+    padding: 10px 10px;
+  }
+
+  .stat-mini-label {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-faint); margin-bottom: 4px;
+  }
+
+  .stat-mini-val {
+    font-size: 18px; font-weight: 700;
+    color: var(--text); letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ANIMATION KEYFRAMES */
+  @keyframes count-up {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slide-in-right {
+    from { opacity: 0; transform: translateX(8px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .kpi-card { animation: count-up 0.4s ease both; }
+  .kpi-card:nth-child(1) { animation-delay: 0.1s; }
+  .kpi-card:nth-child(2) { animation-delay: 0.2s; }
+  .kpi-card:nth-child(3) { animation-delay: 0.3s; }
+  .kpi-card:nth-child(4) { animation-delay: 0.4s; }
+
+  .alert-item { animation: slide-in-right 0.3s ease both; }
+  .alert-item:nth-child(1) { animation-delay: 0.5s; }
+  .alert-item:nth-child(2) { animation-delay: 0.6s; }
+  .alert-item:nth-child(3) { animation-delay: 0.7s; }
+  .alert-item:nth-child(4) { animation-delay: 0.8s; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">Niyantran</div>
+    <div class="topbar-label">BESCOM Grid Command Center</div>
+    <div class="topbar-right">
+      <div class="live-pill"><div class="live-dot"></div>Live</div>
+      <div class="topbar-time" id="clock">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-section">Monitor</div>
+    <div class="sidebar-item active"><div class="sidebar-dot"></div>Grid Overview</div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Feeder Map <span class="sidebar-badge">3</span></div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Load Forecast</div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Substation Status</div>
+
+    <div class="sidebar-section">Control</div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Demand Response <span class="sidebar-badge">Active</span></div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Charger Fleet</div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Grid Hero Pool</div>
+
+    <div class="sidebar-section">Reports</div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Overload Events</div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Intervention Log</div>
+    <div class="sidebar-item"><div class="sidebar-dot"></div>Export Data</div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- KPI ROW -->
+    <div class="kpi-row">
+      <div class="kpi-card" id="kpi1">
+        <div class="kpi-label">Active Feeders</div>
+        <div class="kpi-val" id="kv1">247<span>zones</span></div>
+        <div class="kpi-sub">Bengaluru distribution network</div>
+        <div class="kpi-delta down">&#9660; 3 offline</div>
+      </div>
+      <div class="kpi-card" id="kpi2">
+        <div class="kpi-label">Current Load</div>
+        <div class="kpi-val" id="kv2">84<span>% capacity</span></div>
+        <div class="kpi-sub">Peak window: 18:00–21:00</div>
+        <div class="kpi-delta up">&#9650; +12% vs avg</div>
+      </div>
+      <div class="kpi-card" id="kpi3">
+        <div class="kpi-label">Spikes Prevented</div>
+        <div class="kpi-val" id="kv3">17<span>today</span></div>
+        <div class="kpi-sub">Auto-shifted 2,840 chargers</div>
+        <div class="kpi-delta down">&#9660; Down from 23 yesterday</div>
+      </div>
+      <div class="kpi-card" id="kpi4">
+        <div class="kpi-label">Grid Hero Pool</div>
+        <div class="kpi-val" id="kv4">68.4<span>k units</span></div>
+        <div class="kpi-sub">Available dispatch capacity</div>
+        <div class="kpi-delta down">&#9660; +2.1k enrolled</div>
+      </div>
+    </div>
+
+    <!-- CHART + FEEDER ROW -->
+    <div class="charts-row">
+      <!-- WAVE CHART -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Network Load — Real Time</div>
+          <div class="panel-tag">Auto-correcting</div>
+        </div>
+        <div class="wave-container">
+          <canvas id="waveChart"></canvas>
+        </div>
+      </div>
+
+      <!-- FEEDER LOAD -->
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">Critical Feeders</div>
+        </div>
+        <div class="feeder-list" id="feederList"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+
+    <div>
+      <div class="alert-section-label">Live Alerts</div>
+      <div class="alert-list" id="alertList">
+        <div class="alert-item crit">
+          <div class="alert-zone">Koramangala F-7</div>
+          <div class="alert-msg">Spike forming — 94% load, 340 chargers being shifted</div>
+          <div class="alert-time">18:42:11 &nbsp;·&nbsp; Auto-resolving</div>
+        </div>
+        <div class="alert-item warn">
+          <div class="alert-zone">HSR Layout F-12</div>
+          <div class="alert-msg">Demand rising — 78%, intervention queued</div>
+          <div class="alert-time">18:40:58 &nbsp;·&nbsp; Monitoring</div>
+        </div>
+        <div class="alert-item warn">
+          <div class="alert-zone">Whitefield Sub-3</div>
+          <div class="alert-msg">Industrial surge coinciding with EV peak</div>
+          <div class="alert-time">18:39:22 &nbsp;·&nbsp; Watch</div>
+        </div>
+        <div class="alert-item info">
+          <div class="alert-zone">Indiranagar F-2</div>
+          <div class="alert-msg">Resolved — rescheduling complete, load at 61%</div>
+          <div class="alert-time">18:36:04 &nbsp;·&nbsp; Resolved</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div>
+      <div class="alert-section-label">Today's Impact</div>
+      <div class="stat-pair">
+        <div class="stat-mini">
+          <div class="stat-mini-label">Prevented</div>
+          <div class="stat-mini-val" style="color:var(--red)">17</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Chargers Ctrl</div>
+          <div class="stat-mini-val">2,840</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">kWh Shifted</div>
+          <div class="stat-mini-val">4,120</div>
+        </div>
+        <div class="stat-mini">
+          <div class="stat-mini-label">Grid Health</div>
+          <div class="stat-mini-val" style="color:#4fc89a">96%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+
+    <div>
+      <div class="alert-section-label">2028 Projection</div>
+      <div style="background:rgba(246,48,73,0.08);border:1px solid rgba(246,48,73,0.2);border-radius:6px;padding:12px;">
+        <div style="font-size:28px;font-weight:700;color:var(--red);letter-spacing:-0.02em;line-height:1">340</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px;line-height:1.5">feeder overload events projected annually without Niyantran</div>
+        <div style="height:1px;background:rgba(246,48,73,0.15);margin:8px 0;"></div>
+        <div style="font-size:10px;color:var(--text-faint)">Current trajectory with coordination: <span style="color:#4fc89a;font-weight:600">12 events</span></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+// Clock
+function tick() {
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleTimeString('en-IN', { hour12: false }) + ' IST';
+}
+tick(); setInterval(tick, 1000);
+
+// Animate KPI bars
+setTimeout(() => {
+  document.querySelectorAll('.kpi-card').forEach(c => c.classList.add('loaded'));
+}, 100);
+
+// Feeder data
+const feeders = [
+  { name: 'Koramangala F-7', pct: 94, cls: 'critical' },
+  { name: 'HSR Layout F-12', pct: 78, cls: 'warn' },
+  { name: 'Whitefield Sub-3', pct: 74, cls: 'warn' },
+  { name: 'Jayanagar F-4', pct: 61, cls: 'ok' },
+  { name: 'Indiranagar F-2', pct: 58, cls: 'ok' },
+  { name: 'Electronic City', pct: 48, cls: 'ok' },
+  { name: 'Bannerghatta F-9', pct: 42, cls: 'ok' },
+];
+
+const fl = document.getElementById('feederList');
+feeders.forEach((f, i) => {
+  const row = document.createElement('div');
+  row.className = 'feeder-row';
+  row.innerHTML = `
+    <div class="feeder-meta">
+      <span class="feeder-name">${f.name}</span>
+      <span class="feeder-pct">${f.pct}%</span>
+    </div>
+    <div class="feeder-bar-track">
+      <div class="feeder-bar-fill ${f.cls}" style="width:0%" data-pct="${f.pct}"></div>
+    </div>
+  `;
+  fl.appendChild(row);
+});
+
+setTimeout(() => {
+  document.querySelectorAll('.feeder-bar-fill').forEach(b => {
+    b.style.width = b.dataset.pct + '%';
+  });
+}, 300);
+
+// Wave chart
+const canvas = document.getElementById('waveChart');
+const ctx = canvas.getContext('2d');
+let frame = 0;
+const baseLoad = [];
+const shiftedLoad = [];
+const labels = [];
+
+for (let i = 0; i < 48; i++) {
+  const hr = i / 2;
+  const t = (hr - 19) / 3;
+  const base = 55 + 35 * Math.exp(-t * t * 0.8) + (Math.random() - 0.5) * 5;
+  const shifted = base > 75 ? base * 0.82 : base * 0.97;
+  baseLoad.push(Math.round(base * 10) / 10);
+  shiftedLoad.push(Math.round(shifted * 10) / 10);
+  labels.push(hr % 3 === 0 ? Math.floor(hr) + ':00' : '');
+}
+
+function drawChart() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  const W = rect.width, H = rect.height;
+  const pad = { t: 10, r: 10, b: 24, l: 36 };
+  const cw = W - pad.l - pad.r;
+  const ch = H - pad.t - pad.b;
+
+  ctx.clearRect(0, 0, W, H);
+
+  const n = baseLoad.length;
+  const minV = 30, maxV = 105;
+  const scaleX = i => pad.l + (i / (n - 1)) * cw;
+  const scaleY = v => pad.t + ch - ((v - minV) / (maxV - minV)) * ch;
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+  ctx.lineWidth = 0.5;
+  [40, 55, 70, 85, 100].forEach(v => {
+    const y = scaleY(v);
+    ctx.beginPath(); ctx.moveTo(pad.l, y); ctx.lineTo(W - pad.r, y); ctx.stroke();
+    ctx.fillStyle = 'rgba(122,143,168,0.6)';
+    ctx.font = '9px Helvetica Neue, Helvetica, Arial, sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(v + '%', pad.l - 4, y + 3);
+  });
+
+  // 90% danger line
+  const dangerY = scaleY(90);
+  ctx.strokeStyle = 'rgba(246,48,73,0.25)';
+  ctx.lineWidth = 0.5;
+  ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(pad.l, dangerY); ctx.lineTo(W - pad.r, dangerY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Area fill base (red)
+  ctx.beginPath();
+  baseLoad.forEach((v, i) => i === 0 ? ctx.moveTo(scaleX(i), scaleY(v)) : ctx.lineTo(scaleX(i), scaleY(v)));
+  ctx.lineTo(scaleX(n - 1), pad.t + ch);
+  ctx.lineTo(scaleX(0), pad.t + ch);
+  ctx.closePath();
+  const gBase = ctx.createLinearGradient(0, pad.t, 0, pad.t + ch);
+  gBase.addColorStop(0, 'rgba(246,48,73,0.2)');
+  gBase.addColorStop(1, 'rgba(246,48,73,0.01)');
+  ctx.fillStyle = gBase;
+  ctx.fill();
+
+  // Area fill shifted (teal)
+  ctx.beginPath();
+  shiftedLoad.forEach((v, i) => i === 0 ? ctx.moveTo(scaleX(i), scaleY(v)) : ctx.lineTo(scaleX(i), scaleY(v)));
+  ctx.lineTo(scaleX(n - 1), pad.t + ch);
+  ctx.lineTo(scaleX(0), pad.t + ch);
+  ctx.closePath();
+  const gShift = ctx.createLinearGradient(0, pad.t, 0, pad.t + ch);
+  gShift.addColorStop(0, 'rgba(79,200,154,0.12)');
+  gShift.addColorStop(1, 'rgba(79,200,154,0.01)');
+  ctx.fillStyle = gShift;
+  ctx.fill();
+
+  // Animate: reveal line progressively
+  const revealPct = Math.min(1, (frame / 80));
+  const revealIdx = Math.floor(revealPct * n);
+
+  // Line base
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(246,48,73,0.5)';
+  ctx.lineWidth = 1;
+  baseLoad.slice(0, revealIdx).forEach((v, i) => i === 0 ? ctx.moveTo(scaleX(i), scaleY(v)) : ctx.lineTo(scaleX(i), scaleY(v)));
+  ctx.stroke();
+
+  // Line shifted
+  ctx.beginPath();
+  ctx.strokeStyle = 'rgba(79,200,154,0.7)';
+  ctx.lineWidth = 1.5;
+  shiftedLoad.slice(0, revealIdx).forEach((v, i) => i === 0 ? ctx.moveTo(scaleX(i), scaleY(v)) : ctx.lineTo(scaleX(i), scaleY(v)));
+  ctx.stroke();
+
+  // X axis labels
+  ctx.fillStyle = 'rgba(122,143,168,0.6)';
+  ctx.font = '9px Helvetica Neue, Helvetica, Arial, sans-serif';
+  ctx.textAlign = 'center';
+  labels.forEach((l, i) => {
+    if (l) ctx.fillText(l, scaleX(i), H - 6);
+  });
+
+  // Legend
+  ctx.fillStyle = 'rgba(246,48,73,0.8)';
+  ctx.fillRect(pad.l, 4, 10, 3);
+  ctx.fillStyle = 'rgba(122,143,168,0.7)';
+  ctx.font = '9px Helvetica Neue, Helvetica, Arial, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('Uncoordinated', pad.l + 14, 8);
+
+  ctx.fillStyle = 'rgba(79,200,154,0.8)';
+  ctx.fillRect(pad.l + 110, 4, 10, 3);
+  ctx.fillText('With Niyantran', pad.l + 124, 8);
+
+  // Live cursor + pulsing dot at current time (index ~36 = 18:00)
+  const liveIdx = Math.min(revealIdx - 1, 36);
+  if (liveIdx > 0) {
+    const lx = scaleX(liveIdx);
+    const ly = scaleY(shiftedLoad[liveIdx]);
+    const pulseR = 3 + Math.sin(frame * 0.1) * 1.5;
+    ctx.beginPath();
+    ctx.arc(lx, ly, pulseR, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(79,200,154,0.3)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(lx, ly, 3, 0, Math.PI * 2);
+    ctx.fillStyle = '#4fc89a';
+    ctx.fill();
+  }
+
+  frame++;
+  requestAnimationFrame(drawChart);
+}
+
+window.addEventListener('resize', () => { frame = 0; });
+requestAnimationFrame(drawChart);
+</script>
+</body>
+</html>
