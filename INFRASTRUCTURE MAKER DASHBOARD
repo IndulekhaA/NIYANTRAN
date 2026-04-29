@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Niyantran — Infrastructure Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Helvetica+Neue:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal-1: #91C6BC;
+    --teal-2: #4B9DA9;
+    --teal-3: #2C687B;
+    --teal-deep: #1a4050;
+    --bg: #0d1f26;
+    --bg-card: #122430;
+    --bg-lift: #163040;
+    --text: #F6F3C2;
+    --text-mid: #91C6BC;
+    --text-dim: #4a7a80;
+    --amber: #E37434;
+    --border: rgba(75,157,169,0.15);
+    --border-dim: rgba(145,198,188,0.08);
+  }
+
+  html, body {
+    width: 100vw; height: 100vh; overflow: hidden;
+    background: var(--bg);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: var(--text);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 200px 1fr 1fr;
+    grid-template-rows: 52px 1fr 1fr;
+    height: 100vh;
+    gap: 0;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    grid-column: 1 / -1;
+    background: var(--teal-deep);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center;
+    padding: 0 20px; gap: 24px;
+  }
+
+  .logo {
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--teal-1);
+  }
+
+  .topbar-sub {
+    font-size: 10px; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .topbar-right {
+    margin-left: auto; display: flex; align-items: center; gap: 16px;
+  }
+
+  .status-pill {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    background: rgba(75,157,169,0.15);
+    color: var(--teal-1);
+    padding: 4px 10px; border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+
+  .pulse { width: 6px; height: 6px; border-radius: 50%; background: var(--teal-1); animation: glow-pulse 2s ease-in-out infinite; }
+
+  @keyframes glow-pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(145,198,188,0.4); }
+    50% { opacity: 0.7; box-shadow: 0 0 0 4px rgba(145,198,188,0); }
+  }
+
+  .clock { font-size: 11px; color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+  /* SIDEBAR */
+  .sidebar {
+    grid-row: 2 / -1;
+    background: rgba(18,36,48,0.8);
+    border-right: 1px solid var(--border-dim);
+    padding: 20px 0;
+    display: flex; flex-direction: column; gap: 1px;
+  }
+
+  .nav-section {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-dim);
+    padding: 8px 18px 4px;
+    margin-top: 8px;
+  }
+
+  .nav-item {
+    padding: 8px 18px;
+    font-size: 11px; font-weight: 400;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    display: flex; align-items: center; gap: 8px;
+    letter-spacing: 0.03em;
+    transition: all 0.15s;
+  }
+
+  .nav-item:hover { color: var(--teal-1); background: rgba(145,198,188,0.05); }
+
+  .nav-item.active {
+    color: var(--teal-1);
+    border-left-color: var(--teal-2);
+    background: rgba(75,157,169,0.08);
+    font-weight: 500;
+  }
+
+  .nav-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+
+  .nav-badge {
+    margin-left: auto; background: rgba(227,116,52,0.2);
+    color: var(--amber); font-size: 9px; font-weight: 700;
+    padding: 2px 6px; border-radius: 8px;
+  }
+
+  /* PANELS */
+  .panel {
+    background: var(--bg-card);
+    border: 1px solid var(--border-dim);
+    margin: 8px;
+    border-radius: 10px;
+    padding: 16px;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .panel-title {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .panel-badge {
+    font-size: 9px; font-weight: 600;
+    letter-spacing: 0.08em;
+    background: rgba(75,157,169,0.15);
+    color: var(--teal-2);
+    padding: 2px 8px; border-radius: 4px;
+  }
+
+  /* MAP PANEL */
+  .map-panel {
+    grid-column: 2 / 3; grid-row: 2 / 3;
+  }
+
+  .map-canvas { flex: 1; position: relative; overflow: hidden; border-radius: 6px; }
+
+  canvas#mapCanvas { width: 100%; height: 100%; }
+
+  /* INVESTMENT PANEL */
+  .invest-panel { grid-column: 3 / 4; grid-row: 2 / 3; }
+
+  /* PRIORITY TABLE */
+  .priority-table {
+    flex: 1; overflow: hidden;
+    display: flex; flex-direction: column; gap: 5px;
+  }
+
+  .pt-row {
+    display: grid;
+    grid-template-columns: 22px 1fr 52px 56px 52px;
+    align-items: center; gap: 8px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    background: var(--bg-lift);
+    cursor: pointer;
+    transition: background 0.15s;
+    animation: row-in 0.4s ease both;
+  }
+
+  .pt-row:hover { background: rgba(75,157,169,0.1); }
+
+  @keyframes row-in {
+    from { opacity: 0; transform: translateX(-6px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .pt-row:nth-child(1) { animation-delay: 0.1s; }
+  .pt-row:nth-child(2) { animation-delay: 0.18s; }
+  .pt-row:nth-child(3) { animation-delay: 0.26s; }
+  .pt-row:nth-child(4) { animation-delay: 0.34s; }
+  .pt-row:nth-child(5) { animation-delay: 0.42s; }
+
+  .pt-rank {
+    font-size: 11px; font-weight: 700;
+    color: var(--teal-2); text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pt-zone { font-size: 11px; font-weight: 500; color: var(--text); letter-spacing: 0.01em; }
+  .pt-sub { font-size: 9px; color: var(--text-dim); }
+
+  .pt-score {
+    font-size: 13px; font-weight: 700; text-align: right;
+    color: var(--teal-1); font-variant-numeric: tabular-nums;
+  }
+
+  .pt-growth { font-size: 10px; text-align: right; color: var(--amber); font-variant-numeric: tabular-nums; }
+
+  .pt-bar-wrap { height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; }
+
+  .pt-bar {
+    height: 100%; border-radius: 2px;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    background: linear-gradient(90deg, var(--teal-3), var(--teal-1));
+  }
+
+  /* ROW 3 PANELS */
+  .metrics-panel { grid-column: 2 / 3; grid-row: 3 / 4; }
+  .forecast-panel { grid-column: 3 / 4; grid-row: 3 / 4; }
+
+  /* METRIC GRID */
+  .metrics-grid {
+    flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+
+  .metric-card {
+    background: var(--bg-lift);
+    border-radius: 8px; padding: 12px;
+    border: 1px solid var(--border-dim);
+    display: flex; flex-direction: column;
+    animation: fade-up 0.5s ease both;
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .metric-card:nth-child(1) { animation-delay: 0.2s; }
+  .metric-card:nth-child(2) { animation-delay: 0.3s; }
+  .metric-card:nth-child(3) { animation-delay: 0.4s; }
+  .metric-card:nth-child(4) { animation-delay: 0.5s; }
+
+  .mc-label {
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 4px;
+  }
+
+  .mc-val {
+    font-size: 22px; font-weight: 700;
+    color: var(--text); letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums; line-height: 1;
+  }
+
+  .mc-val span { font-size: 11px; font-weight: 400; color: var(--text-dim); }
+
+  .mc-note { font-size: 9px; color: var(--text-dim); margin-top: 4px; }
+
+  /* FORECAST BARS */
+  .forecast-bars { flex: 1; display: flex; flex-direction: column; justify-content: space-around; }
+
+  .fb-row { display: flex; align-items: center; gap: 8px; }
+
+  .fb-label { font-size: 10px; color: var(--text-mid); min-width: 60px; letter-spacing: 0.02em; }
+
+  .fb-track { flex: 1; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+
+  .fb-fill {
+    height: 100%; border-radius: 3px;
+    background: linear-gradient(90deg, var(--teal-3), var(--teal-2));
+    transition: width 1.4s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  .fb-fill.amber { background: linear-gradient(90deg, #7a3820, var(--amber)); }
+
+  .fb-val { font-size: 10px; color: var(--text); font-weight: 600; min-width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .fb-delta { font-size: 9px; min-width: 28px; text-align: right; }
+  .fb-delta.up { color: var(--amber); }
+  .fb-delta.ok { color: var(--teal-1); }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo">Niyantran</div>
+    <div class="topbar-sub">Infrastructure Intelligence Layer</div>
+    <div class="topbar-right">
+      <div class="status-pill"><div class="pulse"></div>Updating Continuously</div>
+      <div class="clock" id="clock2">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="nav-section">Planning</div>
+    <div class="nav-item active"><div class="nav-dot"></div>Priority Map</div>
+    <div class="nav-item"><div class="nav-dot"></div>Investment Model</div>
+    <div class="nav-item"><div class="nav-dot"></div>Demand Forecast</div>
+
+    <div class="nav-section">Analysis</div>
+    <div class="nav-item"><div class="nav-dot"></div>Feeder Capacity <span class="nav-badge">7 at risk</span></div>
+    <div class="nav-item"><div class="nav-dot"></div>EV Growth Model</div>
+    <div class="nav-item"><div class="nav-dot"></div>Overload Risk</div>
+
+    <div class="nav-section">Reports</div>
+    <div class="nav-item"><div class="nav-dot"></div>Zone Comparison</div>
+    <div class="nav-item"><div class="nav-dot"></div>Annual Plan Export</div>
+    <div class="nav-item"><div class="nav-dot"></div>BESCOM Submission</div>
+
+    <div class="nav-section">Data</div>
+    <div class="nav-item"><div class="nav-dot"></div>Live Sensors</div>
+    <div class="nav-item"><div class="nav-dot"></div>Historical Archive</div>
+  </div>
+
+  <!-- MAP PANEL -->
+  <div class="panel map-panel">
+    <div class="panel-title">
+      Bengaluru Feeder Priority Map
+      <span class="panel-badge">Live Demand Data</span>
+    </div>
+    <div class="map-canvas">
+      <canvas id="mapCanvas"></canvas>
+    </div>
+  </div>
+
+  <!-- INVESTMENT PRIORITY PANEL -->
+  <div class="panel invest-panel">
+    <div class="panel-title">
+      Investment Priority Ranking
+      <span class="panel-badge">By ROI + Risk</span>
+    </div>
+    <div style="display:grid;grid-template-columns:22px 1fr 52px 56px 52px;gap:8px;padding:0 8px 6px;flex-shrink:0;">
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)">#</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim)">Zone</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);text-align:right">Score</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);text-align:right">EV Growth</div>
+      <div style="font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);text-align:right">Spare Cap</div>
+    </div>
+    <div class="priority-table" id="priorityTable"></div>
+  </div>
+
+  <!-- METRICS PANEL -->
+  <div class="panel metrics-panel">
+    <div class="panel-title">Network Health Metrics</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="mc-label">Overloads Prevented</div>
+        <div class="mc-val">17<span>/day</span></div>
+        <div class="mc-note">2028 baseline: 340/yr</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-label">Infrastructure Deferred</div>
+        <div class="mc-val">4<span>substations</span></div>
+        <div class="mc-note">Est. saving: 320 Cr</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-label">Feeder Spare Capacity</div>
+        <div class="mc-val">22<span>% avg</span></div>
+        <div class="mc-note">Up from 8% in Jan</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-label">Zones Monitored</div>
+        <div class="mc-val">247<span></span></div>
+        <div class="mc-note">Continuous real-time</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORECAST PANEL -->
+  <div class="panel forecast-panel">
+    <div class="panel-title">
+      Demand Growth Forecast — 2025 to 2028
+      <span class="panel-badge">Zone-level</span>
+    </div>
+    <div class="forecast-bars" id="forecastBars"></div>
+  </div>
+
+</div>
+
+<script>
+// Clock
+function tick() {
+  document.getElementById('clock2').textContent =
+    new Date().toLocaleTimeString('en-IN', { hour12: false }) + ' IST';
+}
+tick(); setInterval(tick, 1000);
+
+// Priority data
+const zones = [
+  { name: 'Koramangala', sub: 'Zone 7 — South', score: 94, growth: '+48%', spare: '6%' },
+  { name: 'Whitefield', sub: 'Zone 3 — East', score: 88, growth: '+62%', spare: '9%' },
+  { name: 'HSR Layout', sub: 'Zone 12 — SE', score: 81, growth: '+41%', spare: '14%' },
+  { name: 'Electronic City', sub: 'Zone 5 — South', score: 73, growth: '+55%', spare: '11%' },
+  { name: 'Bannerghatta', sub: 'Zone 9 — SW', score: 66, growth: '+33%', spare: '22%' },
+];
+
+const pt = document.getElementById('priorityTable');
+zones.forEach((z, i) => {
+  const row = document.createElement('div');
+  row.className = 'pt-row';
+  row.innerHTML = `
+    <div class="pt-rank">${i + 1}</div>
+    <div>
+      <div class="pt-zone">${z.name}</div>
+      <div class="pt-sub">${z.sub}</div>
+    </div>
+    <div class="pt-score">${z.score}</div>
+    <div class="pt-growth">${z.growth}</div>
+    <div class="pt-growth" style="color:var(--teal-1)">${z.spare}</div>
+  `;
+  pt.appendChild(row);
+});
+
+// Forecast bars
+const forecastData = [
+  { label: 'Koramangala', base: 82, val: 82, cls: 'amber' },
+  { label: 'Whitefield', base: 74, val: 74, cls: 'amber' },
+  { label: 'HSR Layout', base: 67, val: 67, cls: '' },
+  { label: 'Electronic City', base: 61, val: 61, cls: '' },
+  { label: 'Indiranagar', base: 54, val: 54, cls: '' },
+  { label: 'Jayanagar', base: 42, val: 42, cls: '' },
+];
+
+const fb = document.getElementById('forecastBars');
+forecastData.forEach(d => {
+  const row = document.createElement('div');
+  row.className = 'fb-row';
+  row.innerHTML = `
+    <div class="fb-label">${d.label}</div>
+    <div class="fb-track">
+      <div class="fb-fill ${d.cls}" style="width:0%" data-val="${d.base}"></div>
+    </div>
+    <div class="fb-val">${d.val}%</div>
+    <div class="fb-delta ${d.val > 70 ? 'up' : 'ok'}">${d.val > 70 ? 'High' : 'Med'}</div>
+  `;
+  fb.appendChild(row);
+});
+
+setTimeout(() => {
+  document.querySelectorAll('.fb-fill').forEach(b => {
+    b.style.width = b.dataset.val + '%';
+  });
+}, 400);
+
+// Map canvas — Bengaluru abstract feeder heat map
+const mapC = document.getElementById('mapCanvas');
+const mapCtx = mapC.getContext('2d');
+let mapFrame = 0;
+
+const hotspots = [
+  { x: 0.52, y: 0.55, r: 0.07, heat: 0.95, label: 'Koramangala' },
+  { x: 0.78, y: 0.42, r: 0.06, heat: 0.88, label: 'Whitefield' },
+  { x: 0.55, y: 0.65, r: 0.055, heat: 0.81, label: 'HSR' },
+  { x: 0.68, y: 0.75, r: 0.05, heat: 0.73, label: 'E.City' },
+  { x: 0.42, y: 0.78, r: 0.045, heat: 0.66, label: 'Bannerghatta' },
+  { x: 0.62, y: 0.38, r: 0.04, heat: 0.58, label: 'Indiranagar' },
+  { x: 0.35, y: 0.45, r: 0.04, heat: 0.48, label: 'Jayanagar' },
+  { x: 0.48, y: 0.3, r: 0.035, heat: 0.42, label: 'MG Road' },
+];
+
+function drawMap() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = mapC.getBoundingClientRect();
+  if (mapC.width !== rect.width * dpr) {
+    mapC.width = rect.width * dpr;
+    mapC.height = rect.height * dpr;
+    mapCtx.scale(dpr, dpr);
+  }
+  const W = rect.width, H = rect.height;
+  mapCtx.clearRect(0, 0, W, H);
+
+  // Background grid
+  mapCtx.strokeStyle = 'rgba(75,157,169,0.06)';
+  mapCtx.lineWidth = 0.5;
+  for (let x = 0; x < W; x += 28) {
+    mapCtx.beginPath(); mapCtx.moveTo(x, 0); mapCtx.lineTo(x, H); mapCtx.stroke();
+  }
+  for (let y = 0; y < H; y += 28) {
+    mapCtx.beginPath(); mapCtx.moveTo(0, y); mapCtx.lineTo(W, y); mapCtx.stroke();
+  }
+
+  // Draw hotspots
+  hotspots.forEach((h, i) => {
+    const cx = h.x * W, cy = h.y * H;
+    const baseR = h.r * Math.min(W, H);
+    const pulse = baseR * (1 + 0.2 * Math.sin(mapFrame * 0.04 + i));
+
+    // Outer glow ring
+    const g = mapCtx.createRadialGradient(cx, cy, pulse * 0.3, cx, cy, pulse);
+    const opacity = 0.3 + h.heat * 0.4;
+    if (h.heat > 0.8) {
+      g.addColorStop(0, `rgba(246,48,73,${opacity})`);
+      g.addColorStop(1, 'rgba(246,48,73,0)');
+    } else if (h.heat > 0.6) {
+      g.addColorStop(0, `rgba(227,116,52,${opacity * 0.7})`);
+      g.addColorStop(1, 'rgba(227,116,52,0)');
+    } else {
+      g.addColorStop(0, `rgba(75,157,169,${opacity * 0.6})`);
+      g.addColorStop(1, 'rgba(75,157,169,0)');
+    }
+    mapCtx.beginPath(); mapCtx.arc(cx, cy, pulse, 0, Math.PI * 2);
+    mapCtx.fillStyle = g; mapCtx.fill();
+
+    // Inner dot
+    mapCtx.beginPath(); mapCtx.arc(cx, cy, 4, 0, Math.PI * 2);
+    mapCtx.fillStyle = h.heat > 0.8 ? 'rgba(246,48,73,0.9)' : h.heat > 0.6 ? 'rgba(227,116,52,0.85)' : 'rgba(75,157,169,0.8)';
+    mapCtx.fill();
+
+    // Label
+    mapCtx.font = '10px Helvetica Neue, Helvetica, sans-serif';
+    mapCtx.fillStyle = 'rgba(246,243,194,0.75)';
+    mapCtx.textAlign = 'center';
+    mapCtx.fillText(h.label, cx, cy + baseR + 12);
+  });
+
+  // Draw connector lines between nearby nodes
+  for (let i = 0; i < hotspots.length - 1; i++) {
+    for (let j = i + 1; j < hotspots.length; j++) {
+      const a = hotspots[i], b = hotspots[j];
+      const dist = Math.hypot((a.x - b.x) * W, (a.y - b.y) * H);
+      if (dist < 160) {
+        mapCtx.beginPath();
+        mapCtx.moveTo(a.x * W, a.y * H);
+        mapCtx.lineTo(b.x * W, b.y * H);
+        mapCtx.strokeStyle = `rgba(75,157,169,${0.06 + 0.04 * Math.sin(mapFrame * 0.02)})`;
+        mapCtx.lineWidth = 0.5;
+        mapCtx.stroke();
+      }
+    }
+  }
+
+  mapFrame++;
+  requestAnimationFrame(drawMap);
+}
+requestAnimationFrame(drawMap);
+</script>
+</body>
+</html>
