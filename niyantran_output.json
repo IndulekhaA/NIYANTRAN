@@ -1,0 +1,268 @@
+{
+  "timestamp": "2026-05-07 00:40:39.826372",
+  "forecasts": {
+    "Whitefield": {
+      "forecast_kw": 1200.0,
+      "capacity_kw": 12000,
+      "forecast_utilization": 0.1,
+      "overload_risk": false
+    },
+    "Koramangala": {
+      "forecast_kw": 950.0,
+      "capacity_kw": 9500,
+      "forecast_utilization": 0.1,
+      "overload_risk": false
+    },
+    "Indiranagar": {
+      "forecast_kw": 800.0,
+      "capacity_kw": 8000,
+      "forecast_utilization": 0.1,
+      "overload_risk": false
+    },
+    "HSR_Layout": {
+      "forecast_kw": 1000.0,
+      "capacity_kw": 10000,
+      "forecast_utilization": 0.1,
+      "overload_risk": false
+    },
+    "Electronic_City": {
+      "forecast_kw": 1500.0,
+      "capacity_kw": 15000,
+      "forecast_utilization": 0.1,
+      "overload_risk": false
+    },
+    "Hebbal": {
+      "forecast_kw": 750.0,
+      "capacity_kw": 7500,
+      "forecast_utilization": 0.1,
+      "overload_risk": false
+    },
+    "Rajajinagar": {
+      "forecast_kw": 900.0,
+      "capacity_kw": 9000,
+      "forecast_utilization": 0.1,
+      "overload_risk": false
+    },
+    "Jayanagar": {
+      "forecast_kw": 850.0,
+      "capacity_kw": 8500,
+      "forecast_utilization": 0.1,
+      "overload_risk": false
+    }
+  },
+  "alerts": {},
+  "dispatch_decisions": {
+    "Whitefield": {
+      "zone": "Whitefield",
+      "action": "none",
+      "load_reduction_kw": 0
+    },
+    "Koramangala": {
+      "zone": "Koramangala",
+      "action": "none",
+      "load_reduction_kw": 0
+    },
+    "Indiranagar": {
+      "zone": "Indiranagar",
+      "action": "none",
+      "load_reduction_kw": 0
+    },
+    "HSR_Layout": {
+      "zone": "HSR_Layout",
+      "action": "none",
+      "load_reduction_kw": 0
+    },
+    "Electronic_City": {
+      "zone": "Electronic_City",
+      "action": "none",
+      "load_reduction_kw": 0
+    },
+    "Hebbal": {
+      "zone": "Hebbal",
+      "action": "none",
+      "load_reduction_kw": 0
+    },
+    "Rajajinagar": {
+      "zone": "Rajajinagar",
+      "action": "none",
+      "load_reduction_kw": 0
+    },
+    "Jayanagar": {
+      "zone": "Jayanagar",
+      "action": "none",
+      "load_reduction_kw": 0
+    }
+  },
+  "marl_coordination": {
+    "Whitefield": {
+      "total_coordinated_power_kw": 0.0,
+      "action_distribution": {
+        "pause": 50
+      }
+    },
+    "Koramangala": {
+      "total_coordinated_power_kw": 0.0,
+      "action_distribution": {
+        "pause": 50
+      }
+    },
+    "Indiranagar": {
+      "total_coordinated_power_kw": 0.0,
+      "action_distribution": {
+        "pause": 50
+      }
+    },
+    "HSR_Layout": {
+      "total_coordinated_power_kw": 0.0,
+      "action_distribution": {
+        "pause": 50
+      }
+    },
+    "Electronic_City": {
+      "total_coordinated_power_kw": 0.0,
+      "action_distribution": {
+        "pause": 50
+      }
+    },
+    "Hebbal": {
+      "total_coordinated_power_kw": 0.0,
+      "action_distribution": {
+        "pause": 50
+      }
+    },
+    "Rajajinagar": {
+      "total_coordinated_power_kw": 0.0,
+      "action_distribution": {
+        "pause": 50
+      }
+    },
+    "Jayanagar": {
+      "total_coordinated_power_kw": 0.0,
+      "action_distribution": {
+        "pause": 50
+      }
+    }
+  },
+  "infrastructure_rankings": [
+    {
+      "zone": "HSR_Layout",
+      "priority_score": 0.226,
+      "current_utilization": 0.328,
+      "projected_5yr_utilization": 0.328,
+      "overload_frequency": 0.0,
+      "demand_growth_rate_daily": -0.0,
+      "spare_capacity_kw": 6224.0,
+      "ev_density": 0.45,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 0.0,
+      "rank": 1
+    },
+    {
+      "zone": "Koramangala",
+      "priority_score": 0.22,
+      "current_utilization": 0.327,
+      "projected_5yr_utilization": 0.327,
+      "overload_frequency": 0.0,
+      "demand_growth_rate_daily": -0.0,
+      "spare_capacity_kw": 5914.8,
+      "ev_density": 0.42,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 0.0,
+      "rank": 2
+    },
+    {
+      "zone": "Whitefield",
+      "priority_score": 0.2117,
+      "current_utilization": 0.327,
+      "projected_5yr_utilization": 0.327,
+      "overload_frequency": 0.0,
+      "demand_growth_rate_daily": -0.0,
+      "spare_capacity_kw": 7478.0,
+      "ev_density": 0.38,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 0.0,
+      "rank": 3
+    },
+    {
+      "zone": "Indiranagar",
+      "priority_score": 0.2059,
+      "current_utilization": 0.327,
+      "projected_5yr_utilization": 0.327,
+      "overload_frequency": 0.0,
+      "demand_growth_rate_daily": -0.0,
+      "spare_capacity_kw": 4981.1,
+      "ev_density": 0.35,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 0.0,
+      "rank": 4
+    },
+    {
+      "zone": "Jayanagar",
+      "priority_score": 0.1998,
+      "current_utilization": 0.327,
+      "projected_5yr_utilization": 0.327,
+      "overload_frequency": 0.0,
+      "demand_growth_rate_daily": 0.0,
+      "spare_capacity_kw": 5295.3,
+      "ev_density": 0.32,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 0.0,
+      "rank": 5
+    },
+    {
+      "zone": "Electronic_City",
+      "priority_score": 0.1954,
+      "current_utilization": 0.326,
+      "projected_5yr_utilization": 0.326,
+      "overload_frequency": 0.0,
+      "demand_growth_rate_daily": -0.0,
+      "spare_capacity_kw": 9359.7,
+      "ev_density": 0.3,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 0.0,
+      "rank": 6
+    },
+    {
+      "zone": "Hebbal",
+      "priority_score": 0.1917,
+      "current_utilization": 0.327,
+      "projected_5yr_utilization": 0.327,
+      "overload_frequency": 0.0,
+      "demand_growth_rate_daily": -0.0,
+      "spare_capacity_kw": 4674.3,
+      "ev_density": 0.28,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 0.0,
+      "rank": 7
+    },
+    {
+      "zone": "Rajajinagar",
+      "priority_score": 0.1855,
+      "current_utilization": 0.326,
+      "projected_5yr_utilization": 0.326,
+      "overload_frequency": 0.0,
+      "demand_growth_rate_daily": -0.0,
+      "spare_capacity_kw": 5612.6,
+      "ev_density": 0.25,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 0.0,
+      "rank": 8
+    }
+  ]
+}

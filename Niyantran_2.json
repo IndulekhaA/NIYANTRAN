@@ -1,0 +1,442 @@
+{
+  "timestamp": "2024-06-01T20:00:00",
+  "scenario": "PEAK HOUR STRESS \u2014 8PM EVENING SURGE",
+  "total_alerts": 7,
+  "emergency_zones": [
+    "Whitefield",
+    "Koramangala",
+    "Indiranagar",
+    "HSR_Layout",
+    "Jayanagar"
+  ],
+  "critical_zones": [],
+  "warning_zones": [
+    "Electronic_City",
+    "Hebbal"
+  ],
+  "forecasts": {
+    "Whitefield": {
+      "forecast_kw": 12345.5,
+      "capacity_kw": 12000,
+      "forecast_utilization": 1.0288,
+      "overload_risk": true
+    },
+    "Koramangala": {
+      "forecast_kw": 9895.0,
+      "capacity_kw": 9500,
+      "forecast_utilization": 1.0416,
+      "overload_risk": true
+    },
+    "Indiranagar": {
+      "forecast_kw": 8190.4,
+      "capacity_kw": 8000,
+      "forecast_utilization": 1.0238,
+      "overload_risk": true
+    },
+    "HSR_Layout": {
+      "forecast_kw": 10792.3,
+      "capacity_kw": 10000,
+      "forecast_utilization": 1.0792,
+      "overload_risk": true
+    },
+    "Electronic_City": {
+      "forecast_kw": 13552.5,
+      "capacity_kw": 15000,
+      "forecast_utilization": 0.9035,
+      "overload_risk": true
+    },
+    "Hebbal": {
+      "forecast_kw": 6641.2,
+      "capacity_kw": 7500,
+      "forecast_utilization": 0.8855,
+      "overload_risk": false
+    },
+    "Rajajinagar": {
+      "forecast_kw": 7896.5,
+      "capacity_kw": 9000,
+      "forecast_utilization": 0.8774,
+      "overload_risk": false
+    },
+    "Jayanagar": {
+      "forecast_kw": 8351.6,
+      "capacity_kw": 8500,
+      "forecast_utilization": 0.9825,
+      "overload_risk": true
+    }
+  },
+  "alerts": {
+    "Whitefield": {
+      "zone": "Whitefield",
+      "timestamp": "2024-06-01T20:00:00",
+      "level": "emergency",
+      "utilization": 1.029,
+      "trend": "rising_fast",
+      "pre_emptive": true
+    },
+    "Koramangala": {
+      "zone": "Koramangala",
+      "timestamp": "2024-06-01T20:00:00",
+      "level": "emergency",
+      "utilization": 1.042,
+      "trend": "rising_fast",
+      "pre_emptive": true
+    },
+    "Indiranagar": {
+      "zone": "Indiranagar",
+      "timestamp": "2024-06-01T20:00:00",
+      "level": "emergency",
+      "utilization": 1.024,
+      "trend": "rising_fast",
+      "pre_emptive": true
+    },
+    "HSR_Layout": {
+      "zone": "HSR_Layout",
+      "timestamp": "2024-06-01T20:00:00",
+      "level": "emergency",
+      "utilization": 1.079,
+      "trend": "rising_fast",
+      "pre_emptive": true
+    },
+    "Electronic_City": {
+      "zone": "Electronic_City",
+      "timestamp": "2024-06-01T20:00:00",
+      "level": "warning",
+      "utilization": 0.904,
+      "trend": "rising",
+      "pre_emptive": true
+    },
+    "Hebbal": {
+      "zone": "Hebbal",
+      "timestamp": "2024-06-01T20:00:00",
+      "level": "warning",
+      "utilization": 0.885,
+      "trend": "rising",
+      "pre_emptive": true
+    },
+    "Jayanagar": {
+      "zone": "Jayanagar",
+      "timestamp": "2024-06-01T20:00:00",
+      "level": "emergency",
+      "utilization": 0.983,
+      "trend": "rising_fast",
+      "pre_emptive": true
+    }
+  },
+  "dispatch_decisions": {
+    "Whitefield": {
+      "zone": "Whitefield",
+      "timestamp": "2024-06-01T20:00:00",
+      "forecast_utilization": 1.029,
+      "severity": "emergency",
+      "action": "dispatch",
+      "pause_kw": 720.0,
+      "v2g_kw": 17061.0,
+      "defer_kw": 1080.0,
+      "total_reduction_kw": 18861.0,
+      "expected_utilization_post": 0.61,
+      "grid_heroes_activated": 5687
+    },
+    "Koramangala": {
+      "zone": "Koramangala",
+      "timestamp": "2024-06-01T20:00:00",
+      "forecast_utilization": 1.042,
+      "severity": "emergency",
+      "action": "dispatch",
+      "pause_kw": 570.0,
+      "v2g_kw": 17061.0,
+      "defer_kw": 855.0,
+      "total_reduction_kw": 18486.0,
+      "expected_utilization_post": 0.61,
+      "grid_heroes_activated": 5687
+    },
+    "Indiranagar": {
+      "zone": "Indiranagar",
+      "timestamp": "2024-06-01T20:00:00",
+      "forecast_utilization": 1.024,
+      "severity": "emergency",
+      "action": "dispatch",
+      "pause_kw": 480.0,
+      "v2g_kw": 17061.0,
+      "defer_kw": 720.0,
+      "total_reduction_kw": 18261.0,
+      "expected_utilization_post": 0.61,
+      "grid_heroes_activated": 5687
+    },
+    "HSR_Layout": {
+      "zone": "HSR_Layout",
+      "timestamp": "2024-06-01T20:00:00",
+      "forecast_utilization": 1.079,
+      "severity": "emergency",
+      "action": "dispatch",
+      "pause_kw": 600.0,
+      "v2g_kw": 17061.0,
+      "defer_kw": 900.0,
+      "total_reduction_kw": 18561.0,
+      "expected_utilization_post": 0.61,
+      "grid_heroes_activated": 5687
+    },
+    "Electronic_City": {
+      "zone": "Electronic_City",
+      "timestamp": "2024-06-01T20:00:00",
+      "forecast_utilization": 0.904,
+      "severity": "warning",
+      "action": "dispatch",
+      "pause_kw": 900.0,
+      "v2g_kw": 17061.0,
+      "defer_kw": 1350.0,
+      "total_reduction_kw": 19311.0,
+      "expected_utilization_post": 0.61,
+      "grid_heroes_activated": 5687
+    },
+    "Hebbal": {
+      "zone": "Hebbal",
+      "timestamp": "2024-06-01T20:00:00",
+      "forecast_utilization": 0.885,
+      "severity": "warning",
+      "action": "dispatch",
+      "pause_kw": 450.0,
+      "v2g_kw": 17061.0,
+      "defer_kw": 675.0,
+      "total_reduction_kw": 18186.0,
+      "expected_utilization_post": 0.61,
+      "grid_heroes_activated": 5687
+    },
+    "Rajajinagar": {
+      "zone": "Rajajinagar",
+      "timestamp": "2024-06-01T20:00:00",
+      "forecast_utilization": 0.877,
+      "severity": "warning",
+      "action": "dispatch",
+      "pause_kw": 540.0,
+      "v2g_kw": 17061.0,
+      "defer_kw": 810.0,
+      "total_reduction_kw": 18411.0,
+      "expected_utilization_post": 0.61,
+      "grid_heroes_activated": 5687
+    },
+    "Jayanagar": {
+      "zone": "Jayanagar",
+      "timestamp": "2024-06-01T20:00:00",
+      "forecast_utilization": 0.983,
+      "severity": "emergency",
+      "action": "dispatch",
+      "pause_kw": 510.0,
+      "v2g_kw": 17061.0,
+      "defer_kw": 765.0,
+      "total_reduction_kw": 18336.0,
+      "expected_utilization_post": 0.61,
+      "grid_heroes_activated": 5687
+    }
+  },
+  "marl_coordination": {
+    "Whitefield": {
+      "total_coordinated_power_kw": -304.7,
+      "action_distribution": {
+        "pause": 25,
+        "low": 18,
+        "mid": 10,
+        "full": 1,
+        "v2g_discharge": 10
+      }
+    },
+    "Koramangala": {
+      "total_coordinated_power_kw": -338.1,
+      "action_distribution": {
+        "pause": 36,
+        "low": 13,
+        "mid": 9,
+        "full": 4,
+        "v2g_discharge": 13
+      }
+    },
+    "Indiranagar": {
+      "total_coordinated_power_kw": -743.8,
+      "action_distribution": {
+        "pause": 37,
+        "low": 12,
+        "mid": 10,
+        "full": 1,
+        "v2g_discharge": 18
+      }
+    },
+    "HSR_Layout": {
+      "total_coordinated_power_kw": -413.1,
+      "action_distribution": {
+        "pause": 26,
+        "low": 14,
+        "mid": 5,
+        "full": 0,
+        "v2g_discharge": 12
+      }
+    },
+    "Electronic_City": {
+      "total_coordinated_power_kw": -659.0,
+      "action_distribution": {
+        "pause": 25,
+        "low": 18,
+        "mid": 10,
+        "full": 0,
+        "v2g_discharge": 19
+      }
+    },
+    "Hebbal": {
+      "total_coordinated_power_kw": -485.1,
+      "action_distribution": {
+        "pause": 34,
+        "low": 18,
+        "mid": 13,
+        "full": 1,
+        "v2g_discharge": 19
+      }
+    },
+    "Rajajinagar": {
+      "total_coordinated_power_kw": -470.4,
+      "action_distribution": {
+        "pause": 30,
+        "low": 12,
+        "mid": 14,
+        "full": 4,
+        "v2g_discharge": 18
+      }
+    },
+    "Jayanagar": {
+      "total_coordinated_power_kw": -289.2,
+      "action_distribution": {
+        "pause": 26,
+        "low": 14,
+        "mid": 11,
+        "full": 4,
+        "v2g_discharge": 17
+      }
+    }
+  },
+  "infrastructure_rankings": [
+    {
+      "zone": "Whitefield",
+      "rank": 1,
+      "priority_score": 0.97,
+      "current_utilization": 1.029,
+      "projected_5yr_utilization": 1.42,
+      "overload_frequency": 0.3524,
+      "demand_growth_rate_daily": 0.001758,
+      "spare_capacity_kw": 0,
+      "ev_density": 0.38,
+      "forecast_overload_risk": true,
+      "recommended_upgrade_kw": 2009.0,
+      "estimated_cost_inr": 17078880.0,
+      "investment_efficiency": 0.8379
+    },
+    {
+      "zone": "Koramangala",
+      "rank": 2,
+      "priority_score": 0.95,
+      "current_utilization": 1.042,
+      "projected_5yr_utilization": 1.437,
+      "overload_frequency": 0.255,
+      "demand_growth_rate_daily": 0.000849,
+      "spare_capacity_kw": 0,
+      "ev_density": 0.42,
+      "forecast_overload_risk": true,
+      "recommended_upgrade_kw": 1749.0,
+      "estimated_cost_inr": 14864460.0,
+      "investment_efficiency": 2.8995
+    },
+    {
+      "zone": "Indiranagar",
+      "rank": 3,
+      "priority_score": 0.94,
+      "current_utilization": 1.024,
+      "projected_5yr_utilization": 1.413,
+      "overload_frequency": 0.3465,
+      "demand_growth_rate_daily": 0.001627,
+      "spare_capacity_kw": 0,
+      "ev_density": 0.35,
+      "forecast_overload_risk": true,
+      "recommended_upgrade_kw": 1288.0,
+      "estimated_cost_inr": 10943920.0,
+      "investment_efficiency": 3.004
+    },
+    {
+      "zone": "HSR_Layout",
+      "rank": 4,
+      "priority_score": 0.93,
+      "current_utilization": 1.079,
+      "projected_5yr_utilization": 1.489,
+      "overload_frequency": 0.2167,
+      "demand_growth_rate_daily": 0.00127,
+      "spare_capacity_kw": 0,
+      "ev_density": 0.45,
+      "forecast_overload_risk": true,
+      "recommended_upgrade_kw": 2330.0,
+      "estimated_cost_inr": 19801600.0,
+      "investment_efficiency": 2.111
+    },
+    {
+      "zone": "Electronic_City",
+      "rank": 5,
+      "priority_score": 0.91,
+      "current_utilization": 0.903,
+      "projected_5yr_utilization": 1.247,
+      "overload_frequency": 0.3039,
+      "demand_growth_rate_daily": 0.00152,
+      "spare_capacity_kw": 697.5,
+      "ev_density": 0.3,
+      "forecast_overload_risk": true,
+      "recommended_upgrade_kw": 68.0,
+      "estimated_cost_inr": 580125.0,
+      "investment_efficiency": 2.7741
+    },
+    {
+      "zone": "Hebbal",
+      "rank": 6,
+      "priority_score": 0.89,
+      "current_utilization": 0.885,
+      "projected_5yr_utilization": 1.222,
+      "overload_frequency": 0.2365,
+      "demand_growth_rate_daily": 0.000906,
+      "spare_capacity_kw": 483.8,
+      "ev_density": 0.28,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0.0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 2.2733
+    },
+    {
+      "zone": "Rajajinagar",
+      "rank": 7,
+      "priority_score": 0.87,
+      "current_utilization": 0.877,
+      "projected_5yr_utilization": 1.211,
+      "overload_frequency": 0.2385,
+      "demand_growth_rate_daily": 0.001627,
+      "spare_capacity_kw": 653.4,
+      "ev_density": 0.25,
+      "forecast_overload_risk": false,
+      "recommended_upgrade_kw": 0.0,
+      "estimated_cost_inr": 0.0,
+      "investment_efficiency": 1.9173
+    },
+    {
+      "zone": "Jayanagar",
+      "rank": 8,
+      "priority_score": 0.85,
+      "current_utilization": 0.983,
+      "projected_5yr_utilization": 1.356,
+      "overload_frequency": 0.3458,
+      "demand_growth_rate_daily": 0.001155,
+      "spare_capacity_kw": 0,
+      "ev_density": 0.32,
+      "forecast_overload_risk": true,
+      "recommended_upgrade_kw": 912.0,
+      "estimated_cost_inr": 7748812.0,
+      "investment_efficiency": 1.0483
+    }
+  ],
+  "virtual_battery_stats": {
+    "total_grid_heroes": 70000,
+    "virtual_battery_kwh": 1680000,
+    "max_v2g_power_kw": 126000,
+    "equivalent_substations": 3.15,
+    "co2_offset_tons_per_year": 13797
+  }
+}
